@@ -2,26 +2,34 @@ import cv2
 import numpy as np
 import mss
 
-# Define the region of the screen where the game is running
-# You can adjust these numbers to match your game window
-monitor = {"top": 100, "left": 100, "width": 400, "height": 600}
+monitor = {"top": 100, "left": 100, "width": 800, "height": 600}
 
 with mss.mss() as sct:
     while True:
-        # Capture screen
         screenshot = sct.grab(monitor)
-        
-        # Convert raw pixels to numpy array for OpenCV
         img = np.array(screenshot)
-
-        # Optional: Convert BGRA to BGR
         img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
 
-        # Show the live game feed
-        cv2.imshow("Live Game View", img)
+        # Convert to HSV for color detection
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-        # Press 'q' to quit the loop
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        # Mask yellow bird (tweak for your bird's actual color)
+        lower_yellow = np.array([225, 129, 40])
+        upper_yellow = np.array([249, 184, 48])
+        mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+
+        # Find and draw contours
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        for cnt in contours:
+            area = cv2.contourArea(cnt)
+            if area > 50:
+                x, y, w, h = cv2.boundingRect(cnt)
+                cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.putText(img, "Bird", (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+        cv2.imshow("Detecting Bird", img)
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
     cv2.destroyAllWindows()

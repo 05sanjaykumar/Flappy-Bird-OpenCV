@@ -2,7 +2,7 @@ import pygame
 import os
 import random
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = "100,100"
+os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
 
 class FlappyBirdGame:
     def __init__(self):
