@@ -2,6 +2,8 @@ import pygame
 import os
 import random
 
+os.environ['SDL_VIDEO_WINDOW_POS'] = "100,100"
+
 class FlappyBirdGame:
     def __init__(self):
         pygame.init()
@@ -58,10 +60,10 @@ class FlappyBirdGame:
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
                 elif event.key == pygame.K_SPACE:
-                    self.gravity = -7
+                    self.gravity = -5
 
     def update(self):
-        self.gravity += 0.5
+        self.gravity += 0.3
         self.bird_y += self.gravity
 
         if self.bird_y > self.screen_height - self.base_img.get_height():
