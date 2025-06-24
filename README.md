@@ -40,15 +40,6 @@ This project is an experimental bot that uses **Computer Vision (CV)** to **see*
 | 🔜 Phase 6   | Add score tracking & stats         | Planned|
 | 🔜 Phase 7   | Optional ML model for smarter play | Planned|
 
----
-
-## 📸 Screenshots
-
-| Real-time Feed | Detection Overlays |
-|----------------|--------------------|
-| ![live](images/live_view.png) | ![detect](images/detection_view.png) |
-
-_(You can add these screenshots after generating them from OpenCV)_
 
 ---
 
