@@ -51,6 +51,28 @@ class FlappyBirdGame:
             'bottom_pipe': bottom_pipe,
             'passed': False
         })
+    
+    def show_game_over_menu(self):
+        font = pygame.font.SysFont("Arial",32)
+        restart_text = font.render("Game Over - Press SPACE to Restart or Q to Quit", True, (255, 0, 0))
+        self.screen.blit(restart_text, (self.screen_width // 2 - restart_text.get_width() // 2,
+                                    self.screen_height // 2))
+        pygame.display.update()
+        
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.reset_game()
+                        waiting = False
+                    elif event.key == pygame.K_q:
+                        pygame.quit()
+                        exit()
+
 
     def control(self):
         for event in pygame.event.get():
@@ -67,9 +89,8 @@ class FlappyBirdGame:
         self.bird_y += self.gravity
 
         if self.bird_y > self.screen_height - self.base_img.get_height():
-            self.running = False
+            self.show_game_over_menu()
 
-        
 
         for pipe in self.pipes:
             pipe['x'] -= self.pipe_speed
@@ -79,7 +100,7 @@ class FlappyBirdGame:
             bottom_rect = pipe['bottom_pipe'].get_rect(topleft=(pipe['x'], pipe['bottom_y']))
 
             if bird_rect.colliderect(top_rect) or bird_rect.colliderect(bottom_rect):
-                self.running = False
+                self.show_game_over_menu()
 
             if not pipe['passed'] and pipe['x'] + self.pipe_img.get_width() < self.bird_x:
                 pipe['passed'] = True
@@ -90,6 +111,20 @@ class FlappyBirdGame:
             self.pipes.pop(0)
         if not self.pipes or self.pipes[-1]['x'] < self.screen_width - self.pipe_distance:
             self.spawn_pipe()
+
+    
+    def reset_game(self):
+        # Reset your game state variables here
+        self.bird_y = self.screen_height // 2
+        self.bird_velocity = 0
+        self.score = 0
+        self.running = True
+        self.gravity = 0
+        self.score = 0
+
+        self.pipes = []
+        self.pipe_gap = 200
+        self.pipe_distance = 300
 
     def draw(self):
         self.screen.blit(self.background_img, (0, 0))
